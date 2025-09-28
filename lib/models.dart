@@ -1,48 +1,75 @@
+import 'dart:math';
+import 'dart:collection';
+
+enum Gender{male, female, diverse}
+class AccessPermit {
+  final String id;
+  final DateTime createdAt;
+
+  AccessPermit._(this.id) : createdAt = DateTime.now();
+
+
+  AccessPermit(): id = Random().nextInt(1000000000).toString(),
+                  createdAt = DateTime.now();
+
+    @override
+  String toString() => id;
+
+}
+
 class Participant {
-  String firstName;
-  String lastName;
-  int age;
-  DateTime? birthDate;
-  double? finalGrade;
-  double? weight;
-  double? height;
-  String? status;
+  final String firstName;
+  final String lastName;
+  final Gender gender;
+  final AccessPermit accessPermit;
 
-  Participant({
-    required this.firstName,
-    required this.lastName,
-    required this.age,
-    this.birthDate,
-    this.finalGrade,
-    this.weight,
-    this.height,
-    this.status = 'Aktiv',
-  });
+  Participant(this.firstName, this.lastName, this.gender)
+  : accessPermit = AccessPermit();
 
-  // Getter: zusammengesetzter Wert
-  String get fullName => '$firstName $lastName';
-
-  // Beispiel-Setter mit Validierung (optional)
-  set grade(double? value) {
-    if (value != null && (value < 0 || value > 6)) {
-      throw ArgumentError('Note muss zwischen 0 und 6 liegen');
-    }
-    finalGrade = value;
-  }
-
-  void printInfo() {
-    print('Name: $fullName');
-    print('Status: $status');
-    print('Alter: $age ? "nicht angegeben"');
-    print('Geburtstag: ${birthDate?.toIso8601String() ?? "nicht angegeben"}');
-    print(
-      'Abschlussnote: ${finalGrade?.toStringAsFixed(2) ?? "nicht vorhanden"}',
-    );
-    print("Hi, ich heiße $firstName, bin $age Jahre alt.");
-  }
-
-  @override
+    @override
   String toString() {
-    return 'Teilnehmer(fullName: $fullName, role: $status, age: ${age ?? "?"})';
+    return 'Participant: $firstName $lastName, gender: $gender, $accessPermit';
   }
 }
+
+class Course {
+  final String name;
+  final List<Participant> participants = [];
+
+  Course(this.name);
+
+  void addParticipant(Participant p) => participants.add(p);
+
+  
+  @override
+  String toString() {
+    final buffer = StringBuffer();
+    buffer.writeln('Course: $name');
+    for (var p in participants) {
+      buffer.writeln('  - $p');
+    }
+    return buffer.toString();
+  }
+}
+
+class Academy {
+  final String name;
+  final List<Course> courses = [];
+
+  Academy(this.name);
+
+  void addCourse(Course c) => courses.add(c);
+
+  
+  @override
+  String toString() {
+    final buffer = StringBuffer();
+    buffer.writeln('Academy: $name');
+    for (var c in courses) {
+      buffer.writeln(c);
+    }
+    return buffer.toString();
+  }
+}
+
+
